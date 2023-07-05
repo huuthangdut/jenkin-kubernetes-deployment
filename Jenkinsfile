@@ -1,50 +1,78 @@
 pipeline {
 
   environment {
-    dockerimagename = "huuthangdut/react-app"
-    dockerImage = ""
+    DOCKER_IMAGE_NAME = "huuthangdut/react-app"
+    DOCKER_IMAGE_TAG='v1'
+    // VERSION = "${env.BUILD_ID}-${env.GIT_COMMIT}"
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
   }
 
-  agent any
+  agent {
+    kubernetes {
+      yaml '''
+      apiVersion: v1
+      kind: Pod
+      spec:
+        serviceAccountName: jenkins-admin
+        dnsConfig:
+          nameservers:
+            - 8.8.8.8
+        containers:
+          - name: docker
+            image: docker:latest
+            command:
+            - cat
+            tty: true
+            volumeMounts:
+            - mountPath: /var/run/docker.sock
+              name: docker-sock
+          - name: kubectl
+            image: bitnami/kubectl:latest
+            command:
+            - cat
+            tty: true
+        securityContext:
+          runAsUser: 0
+          runAsGroup: 0
+        volumes:
+          - name: docker-sock
+            hostPath: /var/run/docker.sock
+      '''
+    }
+  }
 
   stages {
-
-    stage('Checkout Source') {
-      environment {
-          registryCredential = 'github-credentials'
-      }
-      steps {
-        git branch: 'main',
-          credentialsId: 'github-credentials', // Specify the ID of the GitHub credentials configured in Jenkins
-          url: 'https://github.com/huuthangdut/jenkin-kubernetes-deployment.git'
-      }
-    }
-
     stage('Build image') {
       steps{
-        script {
-          dockerImage = docker.build dockerimagename
-        }
-      }
-    }
-
-    stage('Pushing Image') {
-      environment {
-               registryCredential = 'dockerhub-credentials'
-           }
-      steps{
-        script {
-          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-            dockerImage.push("latest")
+        container('docker') {
+          script {
+            sh 'docker build -t ${DOCKER_IMAGE_NAME}:latest .'
           }
         }
       }
     }
 
-    stage('Deploying React.js container to Kubernetes') {
+    stage('Pushing Image') {
       steps {
-        script {
-          kubernetesDeploy(configs: "deployment.yaml", "service.yaml")
+        container('docker') {
+          script {
+            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USE --password-stdin'
+            sh 'docker tag ${DOCKER_IMAGE_NAME}:latest ${DOCKER_IMAGE_TAG}:${DOCKER_IMAGE_TAG}'
+            sh 'docker push ${DOCKER_IMAGE_NAME}:latest'
+            sh 'docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}'
+          }
+        }
+      }
+    }
+
+    stage('Deploying App to Kubernetes') {
+      steps {
+        container('kubectl') {
+          withCredentials([file(credentialsId: 'kube-config-admin', variable: 'TMPKUBECONFIG')]) {
+            sh 'cat \$TMPKUBECONFIG'
+            sh 'cp \$TMPKUBECONFIG /.kube/config'
+            sh 'kubectl apply -f deployment.yaml'
+          }
         }
       }
     }
