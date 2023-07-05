@@ -12,6 +12,8 @@ pipeline {
       yaml '''
       apiVersion: v1
       kind: Pod
+      metadata:
+        name: pod-agent-demo 
       spec:
         serviceAccountName: jenkins-admin
         dnsConfig:
@@ -36,7 +38,8 @@ pipeline {
           runAsGroup: 0
         volumes:
           - name: docker-sock
-            hostPath: /var/run/docker.sock
+            hostPath:
+              path: /var/run/docker.sock
       '''
     }
   }
