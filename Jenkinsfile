@@ -10,11 +10,13 @@ pipeline {
   stages {
 
     stage('Checkout Source') {
-        environment {
-            registryCredential = 'github-credentials'
-        }
+      environment {
+          registryCredential = 'github-credentials'
+      }
       steps {
-        git 'https://github.com/huuthangdut/jenkin-kubernetes-deployment.git'
+        git branch: 'main',
+          credentialsId: 'github-credentials', // Specify the ID of the GitHub credentials configured in Jenkins
+          url: 'https://github.com/huuthangdut/jenkin-kubernetes-deployment.git'
       }
     }
 
