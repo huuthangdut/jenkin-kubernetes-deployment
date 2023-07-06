@@ -35,6 +35,10 @@ pipeline {
         securityContext:
           runAsUser: 0
           runAsGroup: 0
+        volumes:
+          - name: docker-sock
+            hostPath:
+              path: /var/run/docker.sock
       '''
     }
   }
