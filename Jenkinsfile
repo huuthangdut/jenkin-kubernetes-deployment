@@ -72,14 +72,14 @@ pipeline {
 
     stage('Deploying App to Kubernetes') {
       steps {
-        container('kubectl') {
+        // container('kubectl') {
           // withCredentials([file(credentialsId: 'kube-config-admin', variable: 'TMPKUBECONFIG')]) {
           script {
             // sh 'cat \$TMPKUBECONFIG'
             // sh 'cp \$TMPKUBECONFIG /.kube/config'
             sh 'kubectl apply -f deployment.yaml'
           }
-        }
+        // }
       }
     }
 
