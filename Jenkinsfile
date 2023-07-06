@@ -91,6 +91,7 @@ pipeline {
             sh 'cat \$TMPKUBECONFIG'
             sh 'cp \$TMPKUBECONFIG /.kube/config'
             sh 'kubectl apply -f deployment.yaml'
+          }
         }
       }
     }
