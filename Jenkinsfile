@@ -30,32 +30,11 @@ pipeline {
             volumeMounts:
               - mountPath: /var/run/docker.sock
                 name: docker-sock
-        // dnsConfig:
-        //   nameservers:
-        //     - 8.8.8.8
-        // containers:
-        //   - name: docker
-        //     image: docker:latest
-        //     command:
-        //     - cat
-        //     tty: true
-        //     volumeMounts:
-        //     - mountPath: /var/run/docker.sock
-        //       name: docker-sock
-        //   - name: kubectl
-        //     image: bitnami/kubectl:latest
-        //     command:
-        //     - cat
-        //     tty: true
         imagePullSecrets:
           - name: regcred
         securityContext:
           runAsUser: 0
           runAsGroup: 0
-        // volumes:
-        //   - name: docker-sock
-        //     hostPath:
-        //       path: /var/run/docker.sock
       '''
     }
   }
