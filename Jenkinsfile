@@ -74,6 +74,8 @@ pipeline {
       steps {
         container('kubectl') {
           withCredentials([file(credentialsId: 'kube-config-admin', variable: 'TMPKUBECONFIG')]) {
+            sh 'kubectl cluster-info' 
+            sh 'kubectl config current-context'
             sh 'cat \$TMPKUBECONFIG'
             sh 'cp \$TMPKUBECONFIG /.kube/config'
             sh 'kubectl apply -f deployment.yaml'
