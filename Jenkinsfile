@@ -13,7 +13,7 @@ pipeline {
       apiVersion: v1
       kind: Pod
       metadata:
-        name: pod-agent-demo 
+        name: agent 
       spec:
         serviceAccountName: jenkins-admin
         dnsConfig:
@@ -33,6 +33,8 @@ pipeline {
             command:
             - cat
             tty: true
+        imagePullSecrets:
+          - name: regcred
         securityContext:
           runAsUser: 0
           runAsGroup: 0
@@ -60,7 +62,7 @@ pipeline {
         container('docker') {
           script {
             sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USE --password-stdin'
-            sh 'docker tag ${DOCKER_IMAGE_NAME}:latest ${DOCKER_IMAGE_TAG}:${DOCKER_IMAGE_TAG}'
+            sh 'docker tag ${DOCKER_IMAGE_NAME}:latest ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}'
             sh 'docker push ${DOCKER_IMAGE_NAME}:latest'
             sh 'docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}'
           }
