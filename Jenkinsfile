@@ -20,6 +20,11 @@ pipeline {
           nameservers:
             - 8.8.8.8
         containers:
+          - name: node
+            image: node:14
+            command:
+            - cat
+            tty: true
           - name: docker
             image: docker:latest
             command:
@@ -48,11 +53,13 @@ pipeline {
 
   stages {
     stage('Test') {
-      steps{
-          sh 'node -v'
-          sh 'npm install'
-          sh 'npm run test'
-      }
+      container('node') {
+          script {
+            sh 'node -v'
+            sh 'npm install'
+            sh 'npm run test'
+          }
+        }
     }
 
     stage('Build image') {
