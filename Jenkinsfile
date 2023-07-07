@@ -53,13 +53,15 @@ pipeline {
 
   stages {
     stage('Test') {
-      container('node') {
-          script {
-            sh 'node -v'
-            sh 'npm install'
-            sh 'npm run test'
+      steps{
+        container('node') {
+            script {
+              sh 'node -v'
+              sh 'npm install'
+              sh 'npm run test'
+            }
           }
-        }
+      }
     }
 
     stage('Build image') {
