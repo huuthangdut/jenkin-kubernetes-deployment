@@ -15,6 +15,7 @@ pipeline {
       metadata:
         name: agent 
       spec:
+        serviceAccountName: jenkins-admin
         dnsConfig:
           nameservers:
             - 8.8.8.8
