@@ -77,7 +77,7 @@ pipeline {
             // sh 'kubectl cluster-info' 
             // sh 'cat \$TMPKUBECONFIG'
             // sh 'cp \$TMPKUBECONFIG /.kube/config'
-            sh 'kubectl apply -f deployment.yaml'
+            sh 'kubectl apply -f deployment.yaml --as=system:serviceaccount:devops-tools:jenkins-admin'
           }
         }
       }
