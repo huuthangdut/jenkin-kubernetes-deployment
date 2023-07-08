@@ -2,8 +2,8 @@ pipeline {
 
   environment {
     DOCKER_IMAGE_NAME = "huuthangdut/react-app"
-    DOCKER_IMAGE_TAG='v1'
-    // VERSION = "${env.BUILD_ID}-${env.GIT_COMMIT}"
+    // DOCKER_IMAGE_TAG='v1'
+    DOCKER_IMAGE_TAG = "${env.BUILD_ID}-${env.GIT_COMMIT}"
     DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
   }
 
