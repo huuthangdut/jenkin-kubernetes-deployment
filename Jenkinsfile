@@ -97,7 +97,7 @@ pipeline {
             // sh 'cp \$TMPKUBECONFIG /.kube/config'
             // sh "kubectl set image deployment/deployment react-app=huuthangdut/react-app:${env.BUILD_ID}-${env.GIT_COMMIT}"
             // sh 'kubectl apply -f deployment.yaml'
-            sed "s|${DOCKER_IMAGE_NAME}:TAG|${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}|" deployment.yaml | kubectl apply -f -
+            sh "sed -i 's|${DOCKER_IMAGE_NAME}:TAG|${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}|' deployment.yaml && kubectl apply -f deployment.yaml"
           }
         }
       }
