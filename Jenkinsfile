@@ -95,6 +95,7 @@ pipeline {
             // sh 'kubectl cluster-info' 
             // sh 'cat \$TMPKUBECONFIG'
             // sh 'cp \$TMPKUBECONFIG /.kube/config'
+            sh "kubectl set image deployment/deployment react-app=huuthangdut/react-app:${env.BUILD_ID}-${env.GIT_COMMIT} --record"
             sh 'kubectl apply -f deployment.yaml'
           }
         }
