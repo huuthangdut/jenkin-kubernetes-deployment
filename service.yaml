@@ -8,5 +8,6 @@ spec:
   type: NodePort #Type of the Kubernetes Service
   ports:
   - protocol: TCP
-    port: 3000 #Service port
-    # targetPort: 32002 #The port for the React.js application container
+    port: 80 #Service port
+    targetPort: 80 #The port for the React.js application container
+    nodePort: 32000

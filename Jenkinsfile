@@ -2,8 +2,7 @@ pipeline {
 
   environment {
     DOCKER_IMAGE_NAME = "huuthangdut/react-app"
-    // DOCKER_IMAGE_TAG='v1'
-    DOCKER_IMAGE_TAG = "${env.BUILD_ID}-${env.GIT_COMMIT}"
+    DOCKER_IMAGE_TAG = "${env.GIT_COMMIT}"
     DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
   }
 
@@ -90,13 +89,7 @@ pipeline {
     stage('Deploying App to Kubernetes') {
       steps {
         container('kubectl') {
-          // withCredentials([file(credentialsId: 'kube-config-admin', variable: 'TMPKUBECONFIG')]) {
           script {
-            // sh 'kubectl cluster-info' 
-            // sh 'cat \$TMPKUBECONFIG'
-            // sh 'cp \$TMPKUBECONFIG /.kube/config'
-            // sh "kubectl set image deployment/deployment react-app=huuthangdut/react-app:${env.BUILD_ID}-${env.GIT_COMMIT}"
-            // sh 'kubectl apply -f deployment.yaml'
             sh "sed -i 's|${DOCKER_IMAGE_NAME}:TAG|${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}|' deployment.yaml && kubectl apply -f deployment.yaml"
           }
         }
@@ -106,3 +99,7 @@ pipeline {
   }
 
 }
+
+// docker build -t huuthangdut/react-app .
+// docker tag huuthangdut/react-app:latest huuthangdut/react-app:latest
+// docker push huuthangdut/react-app:latest
