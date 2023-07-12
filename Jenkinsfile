@@ -86,6 +86,22 @@ pipeline {
       }
     }
 
+    stage('Approve based on environment lead') {
+      input {
+          message 'Please select environment'
+          id 'envId'
+          ok 'Submit'
+          submitterParameter 'approverId'
+          parameters {
+              choice choices: ['Prod', 'Dev'], name: 'envType'
+          }
+      }
+
+      steps {
+          echo "Deployment approved to ${envType} by ${approverId}."
+      }
+    }
+
     stage('Deploying App to Kubernetes') {
       steps {
         container('kubectl') {
