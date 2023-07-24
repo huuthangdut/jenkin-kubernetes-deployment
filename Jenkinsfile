@@ -103,7 +103,7 @@ pipeline {
                     message 'Please approve this deployment'
                     id 'manualApprovalId'
                     ok 'Approve'
-                    submitterParameter 'approverId'
+                    // submitterParameter 'approverId'
                 }
             }
     }
