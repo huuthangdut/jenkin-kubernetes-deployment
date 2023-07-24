@@ -99,12 +99,10 @@ pipeline {
 
     stage('Manual Approval') {
             steps {
-                input {
-                    message 'Please approve this deployment'
-                    id 'manualApprovalId'
-                    ok 'Approve'
-                    // submitterParameter 'approverId'
+                timeout(time: 15, unit: "MINUTES") {
+                    input message: 'Do you want to approve the deployment?', ok: 'Yes'
                 }
+                echo "Initiating deployment"
             }
     }
 
