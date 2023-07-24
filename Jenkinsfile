@@ -97,6 +97,17 @@ pipeline {
     //       }
     //   }
 
+    stage('Manual Approval') {
+            steps {
+                input {
+                    message 'Please approve this deployment'
+                    id 'manualApprovalId'
+                    ok 'Approve'
+                    submitterParameter 'approverId'
+                }
+            }
+    }
+
     //   steps {
     //       echo "Deployment approved to ${envType} by ${approverId}."
     //   }
