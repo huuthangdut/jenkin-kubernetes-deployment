@@ -86,17 +86,6 @@ pipeline {
       }
     }
 
-    // stage('Approve based on environment lead') {
-    //   input {
-    //       message 'Please select environment'
-    //       id 'envId'
-    //       ok 'Submit'
-    //       submitterParameter 'approverId'
-    //       parameters {
-    //           choice choices: ['Prod', 'Dev'], name: 'envType'
-    //       }
-    //   }
-
     stage('Manual Approval') {
             steps {
                 timeout(time: 15, unit: "MINUTES") {
@@ -105,11 +94,6 @@ pipeline {
                 echo "Initiating deployment"
             }
     }
-
-    //   steps {
-    //       echo "Deployment approved to ${envType} by ${approverId}."
-    //   }
-    // }
 
     stage('Deploying App to Kubernetes') {
       steps {
@@ -124,7 +108,3 @@ pipeline {
   }
 
 }
-
-// docker build -t huuthangdut/react-app .
-// docker tag huuthangdut/react-app:latest huuthangdut/react-app:latest
-// docker push huuthangdut/react-app:latest
